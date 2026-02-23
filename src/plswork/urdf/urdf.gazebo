@@ -1,0 +1,244 @@
+<?xml version="1.0" ?>
+<robot name="urdf" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:property name="body_color" value="Gazebo/Silver" />
+
+<gazebo>
+  <plugin filename="ignition-gazebo-diff-drive-system"
+          name="ignition::gazebo::systems::DiffDrive">
+
+    <!-- Four wheels via two left/right pairs -->
+    <left_joint>Wheel_f2</left_joint>
+    <left_joint>Wheel_b2</left_joint>
+    <right_joint>Wheel_f1</right_joint>
+    <right_joint>Wheel_b1</right_joint>
+
+    <wheel_separation>0.6853</wheel_separation>
+    <wheel_radius>0.1017</wheel_radius>
+
+    <!-- Gazebo-internal topic names (NOT ROS topics) -->
+    <topic>cmd_vel</topic>
+    <odom_topic>odom</odom_topic>
+    <frame_id>odom</frame_id>
+    <child_frame_id>base_link</child_frame_id>
+
+    <max_linear_velocity>0.5</max_linear_velocity>
+    <max_angular_velocity>0.8</max_angular_velocity>
+    <max_linear_acceleration>0.5</max_linear_acceleration>
+    <max_angular_acceleration>0.5</max_angular_acceleration>
+    <max_wheel_torque>5</max_wheel_torque>
+    <max_wheel_acceleration>0.5</max_wheel_acceleration>
+
+  </plugin>
+
+  <!-- Needed to publish TF odom->base_link into Gazebo -->
+  <plugin filename="ignition-gazebo-pose-publisher-system"
+          name="ignition::gazebo::systems::PosePublisher">
+    <publish_link_pose>true</publish_link_pose>
+    <publish_nested_model_pose>true</publish_nested_model_pose>
+  </plugin>
+</gazebo>
+
+
+<!-- ZED camera workings -->
+<gazebo reference="zed_camera_link">
+  <sensor name="zed2_depth" type="depth_camera">
+    <always_on>1</always_on>
+    <update_rate>15</update_rate>
+    <topic>/zed2/depth/image_raw</topic>
+    <camera>
+      <horizontal_fov>1.8</horizontal_fov>
+      <image>
+        <width>640</width>
+        <height>360</height>
+        <format>R_FLOAT32</format>
+      </image>
+      <clip>
+        <near>0.3</near>
+        <far>20.0</far>
+      </clip>
+    </camera>
+    <plugin filename="ignition-gazebo6-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+    </plugin>
+  </sensor>
+</gazebo>
+
+<gazebo reference="zed2_imu_link">
+  <sensor name="imu_sensor" type="imu">
+    <always_on>1</always_on>
+    <update_rate>100</update_rate>
+    <topic>/imu/data</topic>
+    <plugin filename="ignition-gazebo-imu-system"
+            name="ignition::gazebo::systems::Imu">
+    </plugin>
+    <ignition_frame_id>zed2_imu_link</ignition_frame_id>
+  </sensor>
+</gazebo>
+
+
+<gazebo reference="base_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+  <gravity>true</gravity>
+</gazebo>
+
+<gazebo reference="Wheel_f1_1">
+  <material>${body_color}</material>
+  <mu1>1.5</mu1>
+  <mu2>1.5</mu2>
+  <kp>1000000.0</kp>
+  <kd>100.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>1.0</maxVel>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Wheel_b1_1">
+  <material>${body_color}</material>
+  <mu1>1.5</mu1>
+  <mu2>1.5</mu2>
+  <kp>1000000.0</kp>
+  <kd>100.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>1.0</maxVel>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Wheel_f2_1">
+  <material>${body_color}</material>
+  <mu1>1.5</mu1>
+  <mu2>1.5</mu2>
+  <kp>1000000.0</kp>
+  <kd>100.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>1.0</maxVel>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Wheel_b2_1">
+  <material>${body_color}</material>
+  <mu1>1.5</mu1>
+  <mu2>1.5</mu2>
+  <kp>1000000.0</kp>
+  <kd>100.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>1.0</maxVel>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Suspension_f1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Suspension_f2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Suspension_b2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="Suspension_b1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchRod_b1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_b1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_b1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_f1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchRod_f1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_f1_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_f2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchRod_f2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_f2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchBase_b2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchRod_b2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="4InchRod_b2_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+</robot>

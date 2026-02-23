@@ -1,0 +1,44 @@
+rtabmap:
+  ros__parameters:
+    frame_id: zed2_camera_link
+    odom_frame_id: odom
+    map_frame_id: map
+
+    # RGB-D mode — matches what the ZED wrapper actually publishes
+    subscribe_depth: true
+    subscribe_stereo: false
+    subscribe_rgb: true
+
+    # IMU
+    subscribe_imu: true
+    wait_imu_to_init: true
+    imu_frame_id: zed2_imu_link   # fallback if zed2_imu_link is missing
+
+    # TF buffer — increase to reduce "extrapolation into future" warnings on Jetson
+    tf_buffer_duration: 5.0
+    wait_for_transform: 0.5
+
+    # Sync
+    approx_sync: true
+    queue_size: 30
+    sync_queue_size: 30
+    topic_queue_size: 30
+
+    # Motion thresholds
+    RGBD/LinearUpdate: "0.1"
+    RGBD/AngularUpdate: "0.05"
+
+    # Detection & features
+    Rtabmap/DetectionRate: "2"
+    Vis/MinInliers: "15"
+    Vis/MaxFeatures: "800"
+
+    # Visual registration for RGB-D
+    Reg/Strategy: "0"
+
+    # Loop closure
+    RGBD/NeighborLinkRefining: "true"
+    RGBD/ProximityBySpace: "true"
+
+    # Mapping mode (set Mem/IncrementalMemory to false for localization-only)
+    Mem/IncrementalMemory: "true"

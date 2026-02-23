@@ -1,0 +1,533 @@
+<?xml version="1.0" ?>
+<robot name="urdf" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find urdf_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find urdf_description)/urdf/urdf.trans" />
+<xacro:include filename="$(find urdf_description)/urdf/urdf.gazebo" />
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.0013343149399823772 0.00028358189866519725 0.09528357708891128" rpy="0 0 0"/>
+    <mass value="12.220889046488532"/>
+    <inertia ixx="0.388779" iyy="0.234761" izz="0.562331" ixy="0.000927" iyz="-0.0001" ixz="-0.000707"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Wheel_f1_1">
+  <inertial>
+    <origin xyz="-1.1111022085730227e-07 -0.02369331247106643 -1.6015604767383174e-07" rpy="0 0 0"/>
+    <mass value="13.815850014548804"/>
+    <inertia ixx="0.046183" iyy="0.087048" izz="0.046183" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.332727 0.312987 0.083488" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.332727 0.312987 0.083488" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Wheel_b1_1">
+  <inertial>
+    <origin xyz="-4.454933729136634e-07 -0.02369331247106693 3.717001979403056e-07" rpy="0 0 0"/>
+    <mass value="13.815850014548804"/>
+    <inertia ixx="0.046183" iyy="0.087048" izz="0.046183" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.334113 0.312987 0.077759" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.334113 0.312987 0.077759" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Wheel_f2_1">
+  <inertial>
+    <origin xyz="1.7611029162756253e-07 0.023693312471066874 3.839404488781284e-09" rpy="0 0 0"/>
+    <mass value="13.815850014548804"/>
+    <inertia ixx="0.046183" iyy="0.087048" izz="0.046183" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.289603 -0.312987 0.183869" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.289603 -0.312987 0.183869" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Wheel_b2_1">
+  <inertial>
+    <origin xyz="-6.526775264692475e-08 0.02369331247106704 -6.167566141135339e-08" rpy="0 0 0"/>
+    <mass value="13.815850014548804"/>
+    <inertia ixx="0.046183" iyy="0.087048" izz="0.046183" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.331827 -0.312987 0.086997" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.331827 -0.312987 0.086997" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Suspension_f1_1">
+  <inertial>
+    <origin xyz="-0.24223400246657378 -0.044365793674640275 -0.061553523607869386" rpy="0 0 0"/>
+    <mass value="2.1993493776501816"/>
+    <inertia ixx="0.004283" iyy="0.029631" izz="0.029875" ixy="-0.003562" iyz="-0.000863" ixz="-0.006668"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Suspension_f2_1">
+  <inertial>
+    <origin xyz="-0.2105956784748399 0.044365793674640774 -0.1345942362333628" rpy="0 0 0"/>
+    <mass value="2.19934937765018"/>
+    <inertia ixx="0.010794" iyy="0.029631" izz="0.023365" ixy="0.003109" iyz="0.001939" ixz="-0.012988"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Suspension_b2_1">
+  <inertial>
+    <origin xyz="0.23818736601940063 0.04183240373390654 -0.06315287162159193" rpy="0 0 0"/>
+    <mass value="2.1332036975982693"/>
+    <inertia ixx="0.004602" iyy="0.032238" izz="0.032209" ixy="-0.004367" iyz="0.001111" ixz="0.007597"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Suspension_b1_1">
+  <inertial>
+    <origin xyz="0.23984757828794934 -0.04183240373390662 -0.05652119703901942" rpy="0 0 0"/>
+    <mass value="2.1332036975982764"/>
+    <inertia ixx="0.004202" iyy="0.032238" izz="0.03261" ixy="0.004396" iyz="-0.000989" ixz="0.00682"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchRod_b1_1">
+  <inertial>
+    <origin xyz="-0.012966113775044225 -4.335870901206462e-08 0.06219411224027272" rpy="0 0 0"/>
+    <mass value="0.3175605691662021"/>
+    <inertia ixx="0.000523" iyy="0.000546" izz="3.7e-05" ixy="-0.0" iyz="0.0" ixz="0.000106"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.094063 0.223274 0.016277" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.094063 0.223274 0.016277" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchBase_b1_1">
+  <inertial>
+    <origin xyz="-0.2252917375182119 0.06657896959015258 0.06967167607247043" rpy="0 0 0"/>
+    <mass value="2.5860638753484677"/>
+    <inertia ixx="0.006022" iyy="0.007076" izz="0.001574" ixy="0.0" iyz="-0.0" ixz="0.000806"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.308737 0.289862 -0.048001" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.308737 0.289862 -0.048001" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchRod_f1_1">
+  <inertial>
+    <origin xyz="0.012786959833396741 -4.333333336603573e-08 0.0622314357296538" rpy="0 0 0"/>
+    <mass value="0.3175605691662021"/>
+    <inertia ixx="0.000524" iyy="0.000546" izz="3.6e-05" ixy="0.0" iyz="0.0" ixz="-0.000105"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.09377 0.229624 0.017891" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.09377 0.229624 0.017891" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchBase_f1_1">
+  <inertial>
+    <origin xyz="-0.21854360273106221 -0.06666605639613887 0.16146167207163756" rpy="0 0 0"/>
+    <mass value="2.5860638753484677"/>
+    <inertia ixx="0.006026" iyy="0.007076" izz="0.001569" ixy="0.0" iyz="0.0" ixz="-0.000793"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.135311 0.162949 0.043883" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.135311 0.162949 0.043883" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchBase_f2_1">
+  <inertial>
+    <origin xyz="0.19424723938882849 0.1579800304398621 -0.24277998122035874" rpy="0 0 0"/>
+    <mass value="2.5860638753484677"/>
+    <inertia ixx="0.006112" iyy="0.007076" izz="0.001484" ixy="0.0" iyz="0.0" ixz="-0.000491"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.272521 -0.071653 -0.358369" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.272521 -0.071653 -0.358369" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchRod_f2_1">
+  <inertial>
+    <origin xyz="0.008629382106156824 4.3418000306161275e-08 0.06294326816682969" rpy="0 0 0"/>
+    <mass value="0.3175605691662021"/>
+    <inertia ixx="0.000536" iyy="0.000546" izz="2.4e-05" ixy="0.0" iyz="-0.0" ixz="-7.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.083389 -0.229624 0.046467" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.083389 -0.229624 0.046467" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchBase_b2_1">
+  <inertial>
+    <origin xyz="0.25401982840709597 0.1516120563664343 -0.24084908569362817" rpy="0 0 0"/>
+    <mass value="2.5860638753484677"/>
+    <inertia ixx="0.006029" iyy="0.007076" izz="0.001566" ixy="0.0" iyz="-0.0" ixz="0.000785"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.170921 -0.071653 -0.358369" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.170921 -0.071653 -0.358369" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="4InchRod_b2_1">
+  <inertial>
+    <origin xyz="-0.20536611829963358 -0.0888699566415809 -0.14706665386796988" rpy="0 0 0"/>
+    <mass value="0.3175605691662021"/>
+    <inertia ixx="0.000524" iyy="0.000546" izz="3.6e-05" ixy="0.0" iyz="-0.0" ixz="0.000104"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.286268 -0.312144 -0.190441" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.286268 -0.312144 -0.190441" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- ZED2 Camera Links -->
+<link name="zed_camera_link">
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 1.5708"/>
+    <geometry>
+      <box size="0.175 0.03 0.03"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <inertial>
+    <mass value="0.16"/>
+    <inertia ixx="0.001" ixy="0" ixz="0"
+             iyy="0.001" iyz="0" izz="0.001"/>
+  </inertial>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.175 0.03 0.03"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="zed2_imu_link">
+  <inertial>
+    <mass value="0.001"/>
+    <inertia ixx="0.00001" ixy="0" ixz="0"
+             iyy="0.00001" iyz="0" izz="0.00001"/>
+  </inertial>
+</link>
+
+<joint name="zed2_imu_joint" type="fixed">
+  <parent link="zed_camera_link"/>
+  <child link="zed2_imu_link"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+
+<joint name="zed_camera_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="zed_camera_link"/>
+  <!-- Adjust xyz to where your camera sits on the rover -->
+  <origin xyz="0.15 0 0.2" rpy="0 0 0"/>
+</joint>
+
+<!-- ==================== JOINTS ==================== -->
+
+<joint name="Wheel_f1" type="continuous">
+  <origin xyz="-0.332727 -0.109787 -0.083488" rpy="0 0 0"/>
+  <parent link="Suspension_f1_1"/>
+  <child link="Wheel_f1_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Wheel_b1" type="continuous">
+  <origin xyz="0.334113 -0.109787 -0.077759" rpy="0 0 0"/>
+  <parent link="Suspension_b1_1"/>
+  <child link="Wheel_b1_1"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Wheel_f2" type="continuous">
+  <origin xyz="-0.3326 0.109787 -0.0834" rpy="0 0 0"/>
+  <parent link="Suspension_f2_1"/>
+  <child link="Wheel_f2_1"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Wheel_b2" type="continuous">
+  <origin xyz="0.331827 0.109787 -0.086997" rpy="0 0 0"/>
+  <parent link="Suspension_b2_1"/>
+  <child link="Wheel_b2_1"/>
+  <axis xyz="-0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Center_DeadAxle_f1" type="fixed">
+  <origin xyz="0.0 -0.2032 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Suspension_f1_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Center_DeadAxle_f2" type="fixed">
+  <origin xyz="0.0 0.2032 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Suspension_f2_1"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Center_DeadAxle_b2" type="fixed">
+  <origin xyz="0.0 0.2032 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Suspension_b2_1"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Center_DeadAxle_b1" type="fixed">
+  <origin xyz="0.0 -0.2032 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Suspension_b1_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<!--
+  Linear actuator joints:
+  - LinAct_Body_* joints REMOVED for b1, f1, f2 — they gave those Base links two parents
+  - LinAct_Body_b2 KEPT — it is the only parent for 4InchBase_b2_1
+  - Chain is: Suspension -> Rod (Stroke) -> Base (Slider)
+-->
+
+<joint name="LinAct_Stroke_b1" type="fixed">
+  <origin xyz="0.094063 -0.020074 -0.016277" rpy="0 0 0"/>
+  <parent link="Suspension_b1_1"/>
+  <child link="4InchRod_b1_1"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="LinAct_Slider_b1" type="fixed">
+  <origin xyz="0.214674 -0.066588 0.064278" rpy="0 0 0"/>
+  <parent link="4InchRod_b1_1"/>
+  <child link="4InchBase_b1_1"/>
+  <axis xyz="-0.204096 -0.0 0.978951"/>
+  <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
+</joint>
+
+<joint name="LinAct_Stroke_f1" type="fixed">
+  <origin xyz="-0.09377 -0.026424 -0.017891" rpy="0 0 0"/>
+  <parent link="Suspension_f1_1"/>
+  <child link="4InchRod_f1_1"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="LinAct_Slider_f1" type="fixed">
+  <origin xyz="0.229081 0.066675 -0.025992" rpy="0 0 0"/>
+  <parent link="4InchRod_f1_1"/>
+  <child link="4InchBase_f1_1"/>
+  <axis xyz="-0.201267 0.0 -0.979536"/>
+  <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
+</joint>
+
+<joint name="LinAct_Stroke_f2" type="fixed">
+  <origin xyz="-0.083389 0.026424 -0.046467" rpy="0 1.8 0"/>
+  <parent link="Suspension_f2_1"/>
+  <child link="4InchRod_f2_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="LinAct_Slider_f2" type="fixed">
+  <origin xyz="-0.221015 0.065104 0.078462" rpy="0 0 0"/>
+  <parent link="4InchRod_f2_1"/>
+  <child link="4InchBase_f2_1"/>
+  <axis xyz="0.135829 0.0 0.990732"/>
+  <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
+</joint>
+
+<joint name="LinAct_Body_b2" type="fixed">
+  <origin xyz="-0.170921 0.071653 0.358369" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="4InchBase_b2_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="LinAct_Stroke_b2" type="fixed">
+  <origin xyz="0.286268 0.108944 0.190441" rpy="0 0 0"/>
+  <parent link="Suspension_b2_1"/>
+  <child link="4InchRod_b2_1"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+</robot>

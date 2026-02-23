@@ -1,0 +1,29 @@
+zed_node:
+  ros__parameters:
+
+    general:
+      camera_model: zed2
+      grab_resolution: HD720
+      grab_frame_rate: 30
+
+    depth:
+      depth_mode: PERFORMANCE
+      depth_confidence: 60
+      depth_stabilization: 1
+
+    pos_tracking:
+      pos_tracking_enabled: true   # enabled so ZED publishes /odom
+      publish_tf: true
+      publish_map_tf: false        # RTAB-Map owns the map→odom transform
+
+    sensors:
+      publish_imu_data: true
+      publish_imu_tf: true        # publishes zed2_imu_link into TF tree
+      sensors_image_sync: false   # set false so IMU publishes at full rate independently
+
+    video:
+      brightness: -1
+      contrast: -1
+      hue: -1
+      saturation: -1
+      sharpness: -1
