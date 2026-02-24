@@ -88,44 +88,48 @@
 <gazebo reference="Wheel_f1_1">
   <material>${body_color}</material>
   <mu1>1.5</mu1>
-  <mu2>1.5</mu2>
+  <mu2>0.05</mu2>
   <kp>1000000.0</kp>
   <kd>100.0</kd>
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
+  <fdir1>1 0 0</fdir1>
   <self_collide>true</self_collide>
 </gazebo>
 
 <gazebo reference="Wheel_b1_1">
   <material>${body_color}</material>
   <mu1>1.5</mu1>
-  <mu2>1.5</mu2>
+  <mu2>0.05</mu2>
   <kp>1000000.0</kp>
   <kd>100.0</kd>
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
+  <fdir1>1 0 0</fdir1>
   <self_collide>true</self_collide>
 </gazebo>
 
 <gazebo reference="Wheel_f2_1">
   <material>${body_color}</material>
   <mu1>1.5</mu1>
-  <mu2>1.5</mu2>
+  <mu2>0.05</mu2>
   <kp>1000000.0</kp>
   <kd>100.0</kd>
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
+  <fdir1>1 0 0</fdir1>
   <self_collide>true</self_collide>
 </gazebo>
 
 <gazebo reference="Wheel_b2_1">
   <material>${body_color}</material>
   <mu1>1.5</mu1>
-  <mu2>1.5</mu2>
+  <mu2>0.05</mu2>
   <kp>1000000.0</kp>
   <kd>100.0</kd>
   <minDepth>0.001</minDepth>
   <maxVel>1.0</maxVel>
+  <fdir1>1 0 0</fdir1>
   <self_collide>true</self_collide>
 </gazebo>
 

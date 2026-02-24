@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 from glob import glob
 
 
-package_name = 'bring-up'
+package_name = 'bring_up'
 
 setup(
     name=package_name,

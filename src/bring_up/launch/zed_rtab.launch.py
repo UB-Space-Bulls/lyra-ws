@@ -20,7 +20,7 @@ def generate_launch_description():
 
     # ─── Config file paths ────────────────────────────────────────────────────
        
-    pkg_share = FindPackageShare('bring-up')
+    pkg_share = FindPackageShare('bring_up')
 
     rtabmap_params = PathJoinSubstitution([pkg_share, 'config', 'rtabmap.yaml'])
     zed_params     = PathJoinSubstitution([pkg_share, 'config', 'zed2.yaml'])
