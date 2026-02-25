@@ -15,6 +15,11 @@ def generate_launch_description():
     robot_description_config = xacro.process_file(xacro_file)
     robot_urdf = robot_description_config.toxml()
 
+
+      #nav2
+    bringup_dir = get_package_share_directory('bring-up')
+    nav2_params = os.path.join(bringup_dir, 'config', 'nav2_params.yaml')
+
     # Robot state publisher
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
@@ -104,11 +109,37 @@ def generate_launch_description():
         output='screen'
     )
 
+
+    # ZED2 + RTAB-Map SLAM
+    zed_rtab = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(bringup_dir, 'launch', 'zed_rtab.launch.py')
+        ),
+        launch_arguments={'use_sim_time': 'true'}.items()
+    )
+
+
+    nav2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory('nav2_bringup'),
+                'launch', 'navigation_launch.py'
+            )
+        ),
+        launch_arguments={
+            'use_sim_time': 'true',
+            'params_file': nav2_params,
+        }.items()
+    )
+
+
     return LaunchDescription([
         gazebo,
         TimerAction(period=5.0, actions=[robot_state_publisher_node]),
         TimerAction(period=5.0, actions=[joint_state_publisher_node]),
         TimerAction(period=8.0, actions=[spawn_robot]),
         TimerAction(period=10.0, actions=[bridge]),
+        TimerAction(period=10.0, actions=[zed_rtab]),
+        TimerAction(period=12.0, actions=[nav2]),
         tf_relay,
     ])
