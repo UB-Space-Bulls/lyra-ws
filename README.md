@@ -19,7 +19,7 @@ then rerun the above 3 commands
 ### Install zed_ros2_wrapper
 ```bash
 # Move to the `src` folder of the ROS 2 Workspace
-cd ~/ros2_ws/src/ 
+cd ~/ros2_ws/src/ [PUT YOUR OWN SRC PATH HERE]
 git clone https://github.com/stereolabs/zed-ros2-wrapper.git
 cd ..
 sudo apt update
