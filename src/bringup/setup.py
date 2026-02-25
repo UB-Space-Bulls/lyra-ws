@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 from glob import glob
 
 
-package_name = 'bring_up'
+package_name = 'bringup'
 
 setup(
     name=package_name,
@@ -29,7 +29,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'vision = bring_up.vision:main',
+            'vision = bringup.vision:main',
         ],
     },
 )
