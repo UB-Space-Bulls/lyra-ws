@@ -139,7 +139,7 @@ def generate_launch_description():
         TimerAction(period=5.0, actions=[joint_state_publisher_node]),
         TimerAction(period=8.0, actions=[spawn_robot]),
         TimerAction(period=10.0, actions=[bridge]),
-        TimerAction(period=10.0, actions=[zed_rtab]),
-        TimerAction(period=12.0, actions=[nav2]),
+        #TimerAction(period=10.0, actions=[zed_rtab]),
+        #TimerAction(period=12.0, actions=[nav2]),
         tf_relay,
     ])
