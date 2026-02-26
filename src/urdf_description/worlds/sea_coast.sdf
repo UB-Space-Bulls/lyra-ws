@@ -3,10 +3,10 @@
   <world name="mars_terrain">
 
     <!-- Physics -->
-    <physics name="default_physics" type="dart">
-      <max_step_size>0.001</max_step_size>
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.0005</max_step_size>
       <real_time_factor>1.0</real_time_factor>
-      <real_time_update_rate>1000</real_time_update_rate>
+      <real_time_update_rate>250</real_time_update_rate>
     </physics>
 
     <!-- Required Fortress plugins -->
@@ -18,7 +18,7 @@
             name="ignition::gazebo::systems::SceneBroadcaster"/>
     <plugin filename="ignition-gazebo-sensors-system"
             name="ignition::gazebo::systems::Sensors">
-      <render_engine>ogre2</render_engine>
+      <render_engine>ogre</render_engine>
     </plugin>
 
     <!-- Sun / lighting -->
@@ -33,13 +33,13 @@
     <!-- Terrain mesh model -->
     <model name="terrain">
       <static>true</static>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>50 -50 -5 0 0 0</pose>
       <link name="terrain_link">
         <collision name="terrain_collision">
           <geometry>
             <mesh>
               <!-- Replace with your mesh path -->
-              <uri>file:///meshes/sea_coast.stl</uri>
+              <uri>/home/flashing/ws/src/urdf_description/worlds/meshes/sea_coast.stl</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -56,7 +56,7 @@
           <geometry>
             <mesh>
               <!-- Replace with your mesh path -->
-              <uri>file://meshes/sea_coast.stl</uri>
+              <uri>/home/flashing/ws/src/urdf_description/worlds/meshes/sea_coast.stl</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>

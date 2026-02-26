@@ -1,0 +1,61 @@
+# --- Clock ---
+- ros_topic_name: "/clock"
+  gz_topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "ignition.msgs.Clock"
+  direction: GZ_TO_ROS
+
+# --- cmd_vel (ROS → Gazebo) ---
+- ros_topic_name: "/cmd_vel"
+  gz_topic_name: "/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "ignition.msgs.Twist"
+  direction: ROS_TO_GZ
+
+# --- Odometry ---
+- ros_topic_name: "/model/rover/odometry"
+  gz_topic_name: "/model/rover/odometry"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+# --- TF ---
+- ros_topic_name: "/tf"
+  gz_topic_name: "/model/rover/tf"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "ignition.msgs.Pose_V"
+  direction: GZ_TO_ROS
+
+# --- ZED2 Depth → /zed2/zed_node/depth/depth_registered ---
+- ros_topic_name: "/zed2/zed_node/depth/depth_registered"
+  gz_topic_name: "/zed2/depth/image_raw"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "ignition.msgs.Image"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/zed2/zed_node/depth/camera_info"
+  gz_topic_name: "/zed2/depth/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "ignition.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+
+# --- ZED2 Point Cloud ---
+- ros_topic_name: "/zed2/point_cloud/cloud_registered"
+  gz_topic_name: "/zed2/depth/image_raw/points"  # ← was wrong, this is the real gz topic
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "ignition.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS
+
+# --- ZED2 RGB → /zed2/zed_node/rgb/image_rect_color ---
+- ros_topic_name: "/zed2/zed_node/rgb/image_rect_color"
+  gz_topic_name: "/zed2/rgb/image_rect_color"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "ignition.msgs.Image"
+  direction: GZ_TO_ROS
+
+# --- IMU → /zed2/zed_node/imu/data ---
+- ros_topic_name: "/zed2/zed_node/imu/data"
+  gz_topic_name: "/imu/data"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "ignition.msgs.IMU"
+  direction: GZ_TO_ROS

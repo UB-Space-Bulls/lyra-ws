@@ -32,6 +32,16 @@ def generate_launch_description():
         }]
     )
 
+    static_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='zed_depth_frame_fix',
+        arguments=['0', '0', '0', '0', '0', '0',
+                   'zed_camera_link',
+                   'rover/base_link/zed2_depth'],
+        parameters=[{'use_sim_time': True}]
+    )
+
     # Launch Gazebo Fortress
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
@@ -41,7 +51,7 @@ def generate_launch_description():
                 'gz_sim.launch.py'
             ])
         ]),
-        launch_arguments={'gz_args': '-r empty.sdf'}.items()
+        launch_arguments={'gz_args': '-r ' + world_file}.items()
     )
 
     # Spawn robot into Gazebo
@@ -62,20 +72,21 @@ def generate_launch_description():
         executable='parameter_bridge',
         arguments=[
             '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
-            '/model/rover/odometry@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
+            '/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
             '/model/rover/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
             '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock',
-            '/zed2/depth/image_raw@sensor_msgs/msg/Image[ignition.msgs.Image',
-            '/zed2/depth/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
-            '/zed2/point_cloud/cloud_registered@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
+            '/zed2/depth/image_raw/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
+            '/zed2/depth/image_raw/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
+            '/zed2/depth/image_raw/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
+            '/zed2/depth/image_raw/image@sensor_msgs/msg/Image[ignition.msgs.Image',
             '/zed2/rgb/image_rect_color@sensor_msgs/msg/Image[ignition.msgs.Image',
             '/imu/data@sensor_msgs/msg/Imu[ignition.msgs.IMU',
         ],
         remappings=[
-            ('/model/rover/odometry', '/odom'),
             ('/model/rover/tf', '/gz_tf'),
             ('/zed2/depth/image_raw', '/zed2/depth/depth_registered'),
             ('/model/rover/joint_state', '/joint_states'),
+            ('/zed2/depth/image_raw/points', '/zed2/point_cloud/cloud_registered'),
         ],
         parameters=[{
             'use_sim_time': True
@@ -109,15 +120,39 @@ def generate_launch_description():
         output='screen'
     )
 
-
-    # ZED2 + RTAB-Map SLAM
-    zed_rtab = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(bringup_dir, 'launch', 'zed_rtab.launch.py')
-        ),
-        launch_arguments={'use_sim_time': 'true'}.items()
+    rtab = Node(
+        package='rtabmap_slam',
+        executable='rtabmap',
+        name='rtabmap',
+        output='screen',
+        parameters=[{
+            'use_sim_time': True,
+            'frame_id': 'base_link',
+            'odom_frame_id': 'odom',
+            'subscribe_depth': False,
+            'subscribe_rgb': False,        # ← add this
+            'subscribe_stereo': False,
+            'subscribe_scan_cloud': True,
+            'approx_sync': True,
+            'queue_size': 30,
+            'Grid/RayTracing': 'true',
+            'Grid/3D': 'true',
+            'Grid/CellSize': '0.05',
+            'Grid/RangeMax': '20.0',
+            'Grid/RangeMin': '0.1',
+            'GridGlobal/MinSize': '20',
+            'Mem/IncrementalMemory': 'true',
+            'ICP/PointToPlaneNormalNeighbors': '20',
+            'Icp/MaxCorrespondenceDistance': '1.0',
+            'Grid/NoiseFilteringRadius': '0.2',
+            'Grid/NoiseFilteringMinNeighbors': '8',
+        }],
+        remappings=[
+            ('/scan_cloud', '/zed2/point_cloud/cloud_registered'),
+            ('/odom', '/odom'),
+        ],
+        arguments=['--delete_db_on_start'],
     )
-
 
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -131,7 +166,7 @@ def generate_launch_description():
             'params_file': nav2_params,
         }.items()
     )
-
+    
 
     return LaunchDescription([
         gazebo,
@@ -139,7 +174,7 @@ def generate_launch_description():
         TimerAction(period=5.0, actions=[joint_state_publisher_node]),
         TimerAction(period=8.0, actions=[spawn_robot]),
         TimerAction(period=10.0, actions=[bridge]),
-        #TimerAction(period=10.0, actions=[zed_rtab]),
-        #TimerAction(period=12.0, actions=[nav2]),
         tf_relay,
+        static_tf,
+        TimerAction(period=12.0, actions=[rtab]),
     ])
