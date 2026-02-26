@@ -17,7 +17,7 @@ def generate_launch_description():
 
 
       #nav2
-    bringup_dir = get_package_share_directory('bring-up')
+    bringup_dir = get_package_share_directory('bringup')
     nav2_params = os.path.join(bringup_dir, 'config', 'nav2_params.yaml')
 
     # Robot state publisher
