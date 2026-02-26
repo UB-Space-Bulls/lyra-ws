@@ -169,7 +169,7 @@
   <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
 
-<joint name="Slider 7" type="prismatic">
+<joint name="slider7" type="prismatic">
   <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="Component11_v2_v1_1"/>
@@ -177,14 +177,14 @@
   <limit upper="0.81" lower="0.0" effort="100" velocity="100"/>
 </joint>
 
-<joint name="Revolute 8" type="continuous">
+<joint name="revolute8" type="continuous">
   <origin xyz="-0.0 0.040662 0.06045" rpy="0 0 0"/>
   <parent link="Component11_v2_v1_1"/>
   <child link="first_joint_v1_1"/>
   <axis xyz="0.0 -1.0 -0.0"/>
 </joint>
 
-<joint name="Revolute 9" type="continuous">
+<joint name="revolute9" type="continuous">
   <origin xyz="9e-06 0.153325 0.622554" rpy="0 0 0"/>
   <parent link="first_joint_v1_1"/>
   <child link="Component97_v3_v1_1"/>

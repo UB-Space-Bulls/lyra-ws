@@ -3,7 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 import sys, tty, termios, threading
 
-NUM_JOINTS = 5  # change to match your arm
+NUM_JOINTS = 3  # change to match your arm
 SPEED = 0.5
 
 class KeyVelController(Node):
@@ -45,9 +45,6 @@ def main():
         '1': (0,  SPEED), 'q': (0, -SPEED),
         '2': (1,  SPEED), 'w': (1, -SPEED),
         '3': (2,  SPEED), 'e': (2, -SPEED),
-        '4': (3,  SPEED), 'r': (3, -SPEED),
-        '5': (4,  SPEED), 't': (4, -SPEED),
-        # add more joints: '3'/'e', '4'/'r', etc.
     }
 
     while True:

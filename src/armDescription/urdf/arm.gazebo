@@ -5,33 +5,34 @@
 <xacro:property name="body_color" value="Gazebo/Silver" />
 
 <gazebo>
-  <ros2_control name="GazeboSystem" type="system">
-    <hardware>
-      <plugin>ign_ros2_control/IgnitionSystem</plugin>
-    </hardware>
-    <joint name="slider7">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-    <joint name="revolute8">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-    <joint name="revolute9">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-  </ros2_control>
-
   <plugin
     filename="ign_ros2_control-system"
     name="ign_ros2_control::IgnitionROS2ControlPlugin">
-    <parameters>/home/flashing/ws/install/armDescription/share/armDescription/config/armcontroller.yaml</parameters>
+    <parameters>$(arg controller_params)</parameters>
+    <ros2_control>GazeboSystem</ros2_control>
   </plugin>
 </gazebo>
+
+<ros2_control name="GazeboSystem" type="system">
+  <hardware>
+    <plugin>ign_ros2_control/IgnitionSystem</plugin>
+  </hardware>
+  <joint name="slider7">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+  <joint name="revolute8">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+  <joint name="revolute9">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+</ros2_control>
 
 <gazebo reference="base_link">
   <material>${body_color}</material>
