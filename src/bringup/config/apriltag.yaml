@@ -9,5 +9,6 @@ apriltag:
       blur: 0.0
       refine_edges: 1
       sharpening: 0.25
-      debug: 0
+      # 'debug' is a boolean parameter; using an integer caused a crash
+      debug: false
     publish_tf: true
