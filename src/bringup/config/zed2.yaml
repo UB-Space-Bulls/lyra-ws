@@ -4,7 +4,7 @@ zed_node:
     general:
       camera_model: zed2
       grab_resolution: HD720
-      grab_frame_rate: 15
+      grab_frame_rate: 30   #increased from 15 --double update rate for RTAB map
 
     depth:
       depth_mode: PERFORMANCE
@@ -19,7 +19,7 @@ zed_node:
     sensors:
       publish_imu_data: true
       publish_imu_tf: true        # publishes zed2_imu_link into TF tree
-      sensors_image_sync: false   # set false so IMU publishes at full rate independently
+      sensors_image_sync: true   # set true (change4)
 
     video:
       brightness: -1

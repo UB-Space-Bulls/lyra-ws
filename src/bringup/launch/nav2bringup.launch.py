@@ -39,6 +39,7 @@ def generate_launch_description():
     nav2_params_file = PathJoinSubstitution([pkg_share, 'config', 'nav2_params.yaml'])
     rviz_config_file = PathJoinSubstitution([pkg_share, 'rviz', 'nav2bringup.rviz'])
     urdf_path        = os.path.join(urdf_pkg, 'urdf', 'urdf.xacro')  # adjust filenames
+    apriltag_params_file = PathJoinSubstitution([pkg_share, 'config', 'apriltag.yaml'])
 
     # ─── ZED + RTAB-Map (your existing launch) ────────────────────────────────
 
@@ -55,19 +56,22 @@ def generate_launch_description():
         }.items()
     )
 
-    apriltag_node = Node(
-        package='apriltag_ros',
-        executable='apriltag_node',
-        name='apriltag',
-        remappings=[
-            ('image_rect', '/zed2/zed_node/rgb/color/rect/image'),
-            ('camera_info', '/zed2/zed_node/rgb/color/rect/camera_info'),
-        ],
-        parameters=[{
-            'family': '36h11',
-            'size': 0.166,
-        }]
-    )
+    apriltag_node = Node(       #change 5
+    package='apriltag_ros',
+    executable='apriltag_node',
+    name='apriltag',
+    remappings=[
+        ('image_rect', '/zed2/zed_node/rgb/image_rect_color'),
+        ('camera_info', '/zed2/zed_node/rgb/camera_info'),
+    ],
+    parameters=[apriltag_params_file],
+    extra_arguments=[{'use_intra_process_comms': True}],
+    ros_arguments=[
+        '--ros-args',
+        '--param', 'image_transport:=raw',
+        '--qos-profile-overrides-path', PathJoinSubstitution([pkg_share, 'config', 'apriltag_qos.yaml'])
+    ]
+)
 
     # ─── Robot State Publisher ────────────────────────────────────────────────
     # Publishes URDF-derived transforms (base_link → sensor frames).
@@ -93,12 +97,7 @@ def generate_launch_description():
         name='joint_state_publisher',
     )
 
-    odom_tf_pub = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='odom_to_base_link',
-        arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link']
-    )
+    #Deleted odom tf publisher ( change 1 )
 
     # ─── Nav2 Bringup ─────────────────────────────────────────────────────────
 
@@ -148,9 +147,7 @@ def generate_launch_description():
         declare_use_sim_time,
         declare_autostart,
         declare_use_rviz,
-
-        # 1. publish urdf
-        odom_tf_pub,
+        
         
         TimerAction(period=2.0,actions=[robot_state_publisher,joint_state_publisher]),
 

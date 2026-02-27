@@ -12,17 +12,17 @@ rtabmap:
     wait_imu_to_init: true
     imu_frame_id: zed2_imu_link
     # TF buffer — increase to reduce "extrapolation into future" warnings on Jetson
-    tf_buffer_duration: 5.0
-    wait_for_transform: 0.5
+    tf_buffer_duration: 10.0
+    wait_for_transform: 1.0
     # Sync
     approx_sync: true
-    approx_sync_max_interval: 0.05
+    approx_sync_max_interval: 0.2
     queue_size: 30
     sync_queue_size: 30
     topic_queue_size: 30
     # TF timing tolerance
-    tf_delay: 0.05
-    tf_tolerance: 0.1
+    tf_delay: 0.1
+    tf_tolerance: 0.3     #change 3
     # QoS
     qos_image: 2
     qos_camera_info: 2
