@@ -27,7 +27,7 @@ def generate_launch_description():
         description='Automatically start Nav2 lifecycle nodes'
     )
     declare_use_rviz = DeclareLaunchArgument(
-        'use_rviz', default_value='false',
+        'use_rviz', default_value='true',
         description='Launch RViz2 for visualization'
     )
 
@@ -68,7 +68,6 @@ def generate_launch_description():
             apriltag_params_file,
             {'image_transport': 'raw'},
         ],
-        extra_arguments=[{'use_intra_process_comms': True}],
     )
 
     # ─── Robot State Publisher ────────────────────────────────────────────────
@@ -95,7 +94,12 @@ def generate_launch_description():
         name='joint_state_publisher',
     )
 
-    #Deleted odom tf publisher ( change 1 )
+    odom_tf_pub = Node(
+	package='tf2_ros',
+	executable='static_transform_publisher',
+	name='odom_to_base_link',
+	arguments=['0','0','0','0','0','0','odom','base_link']
+    ) # whoever is reading this i will skin you alive if you remove ;)
 
     # ─── Nav2 Bringup ─────────────────────────────────────────────────────────
 
@@ -146,7 +150,7 @@ def generate_launch_description():
         declare_autostart,
         declare_use_rviz,
         
-        
+        odom_tf_pub,
         TimerAction(period=2.0,actions=[robot_state_publisher,joint_state_publisher]),
 
         # 2. start zed rtab stack
