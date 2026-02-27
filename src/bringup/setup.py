@@ -30,6 +30,7 @@ setup(
     entry_points={
         'console_scripts': [
             'vision = bringup.vision:main',
+            'nav2tag = bringup.nav2tag:main',
         ],
     },
 )

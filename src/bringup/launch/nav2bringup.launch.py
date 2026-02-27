@@ -55,6 +55,20 @@ def generate_launch_description():
         }.items()
     )
 
+    apriltag_node = Node(
+        package='apriltag_ros',
+        executable='apriltag_node',
+        name='apriltag',
+        remappings=[
+            ('image_rect', '/zed2/zed_node/rgb/color/rect/image'),
+            ('camera_info', '/zed2/zed_node/rgb/color/rect/camera_info'),
+        ],
+        parameters=[{
+            'family': '36h11',
+            'size': 0.166,
+        }]
+    )
+
     # ─── Robot State Publisher ────────────────────────────────────────────────
     # Publishes URDF-derived transforms (base_link → sensor frames).
     # Required so RTAB-Map and Nav2 can look up camera/IMU positions.
@@ -136,6 +150,7 @@ def generate_launch_description():
 
         # 2. start zed rtab stack
         TimerAction(period=6.0,actions=[zed_rtabmap_launch]),
+        TimerAction(period=7.0,actions=[apriltag_node]),
 
         # 3. Start Nav2 stack
         TimerAction(period=10.0,actions=[nav2_bringup_launch]),
