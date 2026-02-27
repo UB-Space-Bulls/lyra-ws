@@ -56,22 +56,20 @@ def generate_launch_description():
         }.items()
     )
 
-    apriltag_node = Node(       #change 5
-    package='apriltag_ros',
-    executable='apriltag_node',
-    name='apriltag',
-    remappings=[
-        ('image_rect', '/zed2/zed_node/rgb/image_rect_color'),
-        ('camera_info', '/zed2/zed_node/rgb/camera_info'),
-    ],
-    parameters=[apriltag_params_file],
-    extra_arguments=[{'use_intra_process_comms': True}],
-    ros_arguments=[
-        '--ros-args',
-        '--param', 'image_transport:=raw',
-        '--qos-profile-overrides-path', PathJoinSubstitution([pkg_share, 'config', 'apriltag_qos.yaml'])
-    ]
-)
+    apriltag_node = Node(
+        package='apriltag_ros',
+        executable='apriltag_node',
+        name='apriltag',
+        remappings=[
+            ('image_rect', '/zed2/zed_node/rgb/image_rect_color'),
+            ('camera_info', '/zed2/zed_node/rgb/camera_info'),
+        ],
+        parameters=[
+            apriltag_params_file,
+            {'image_transport': 'raw'},
+        ],
+        extra_arguments=[{'use_intra_process_comms': True}],
+    )
 
     # ─── Robot State Publisher ────────────────────────────────────────────────
     # Publishes URDF-derived transforms (base_link → sensor frames).
