@@ -73,6 +73,19 @@ def generate_launch_description():
         }]
     )
 
+    joint_state_publisher = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+    )
+
+    odom_tf_pub = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='odom_to_base_link',
+        arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link']
+    )
+
     # ─── Nav2 Bringup ─────────────────────────────────────────────────────────
 
     nav2_bringup_launch = IncludeLaunchDescription(
@@ -116,11 +129,13 @@ def generate_launch_description():
         declare_autostart,
         declare_use_rviz,
 
-        # 1. Start ZED camera + RTAB-Map SLAM
-        robot_state_publisher,
+        # 1. publish urdf
+        odom_tf_pub,
+        
+        TimerAction(period=2.0,actions=[robot_state_publisher,joint_state_publisher]),
 
-        # 2. Publish URDF transforms
-        TimerAction(period=4.0,actions=[zed_rtabmap_launch]),
+        # 2. start zed rtab stack
+        TimerAction(period=6.0,actions=[zed_rtabmap_launch]),
 
         # 3. Start Nav2 stack
         TimerAction(period=10.0,actions=[nav2_bringup_launch]),

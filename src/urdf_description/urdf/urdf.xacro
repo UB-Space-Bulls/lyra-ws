@@ -14,14 +14,14 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -35,14 +35,14 @@
   <visual>
     <origin xyz="0.332727 0.312987 0.083488" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.332727 0.312987 0.083488" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -56,14 +56,14 @@
   <visual>
     <origin xyz="-0.334113 0.312987 0.077759" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.334113 0.312987 0.077759" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -77,14 +77,14 @@
   <visual>
     <origin xyz="0.289603 -0.312987 0.183869" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.289603 -0.312987 0.183869" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -98,14 +98,14 @@
   <visual>
     <origin xyz="-0.331827 -0.312987 0.086997" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.331827 -0.312987 0.086997" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Wheel_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Wheel_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -119,14 +119,14 @@
   <visual>
     <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -140,14 +140,14 @@
   <visual>
     <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -161,14 +161,14 @@
   <visual>
     <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -182,14 +182,14 @@
   <visual>
     <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.0 0.2032 0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/Suspension_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/Suspension_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -203,14 +203,14 @@
   <visual>
     <origin xyz="-0.094063 0.223274 0.016277" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.094063 0.223274 0.016277" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -224,14 +224,14 @@
   <visual>
     <origin xyz="-0.308737 0.289862 -0.048001" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.308737 0.289862 -0.048001" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_b1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -245,14 +245,14 @@
   <visual>
     <origin xyz="0.09377 0.229624 0.017891" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.09377 0.229624 0.017891" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -266,14 +266,14 @@
   <visual>
     <origin xyz="-0.135311 0.162949 0.043883" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.135311 0.162949 0.043883" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_f1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -287,14 +287,14 @@
   <visual>
     <origin xyz="0.272521 -0.071653 -0.358369" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.272521 -0.071653 -0.358369" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -308,14 +308,14 @@
   <visual>
     <origin xyz="0.083389 -0.229624 0.046467" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.083389 -0.229624 0.046467" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_f2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_f2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -329,14 +329,14 @@
   <visual>
     <origin xyz="0.170921 -0.071653 -0.358369" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.170921 -0.071653 -0.358369" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchBase_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchBase_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -350,14 +350,14 @@
   <visual>
     <origin xyz="-0.286268 -0.312144 -0.190441" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.286268 -0.312144 -0.190441" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find urdf_description)/meshes/4InchRod_b2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://urdf_description/meshes/4InchRod_b2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
