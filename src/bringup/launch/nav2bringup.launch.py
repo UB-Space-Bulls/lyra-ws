@@ -61,8 +61,13 @@ def generate_launch_description():
         executable='apriltag_node',
         name='apriltag',
         remappings=[
-            ('image_rect', '/zed2/zed_node/rgb/image_rect_color'),
-            ('camera_info', '/zed2/zed_node/rgb/camera_info'),
+            # ZED2 wrapper publishes rectified colour images under
+            # `/zed2/zed_node/rgb/color/rect/...`, not the vanilla
+            # `/zed2/zed_node/rgb/image_rect_color` topic that the
+            # original launch assumed. Use the actual topic names so the
+            # detector receives data.
+            ('image_rect', '/zed2/zed_node/rgb/color/rect/image'),
+            ('camera_info', '/zed2/zed_node/rgb/color/rect/camera_info'),
         ],
         parameters=[
             apriltag_params_file,
