@@ -114,6 +114,7 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
+      transform_tolerance: 0.5  # increase from default 0.1
       use_sim_time: false
       update_frequency: 5.0
       publish_frequency: 2.0
@@ -149,6 +150,7 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
+      transform_tolerance: 0.5
       use_sim_time: false
       update_frequency: 1.0
       publish_frequency: 1.0

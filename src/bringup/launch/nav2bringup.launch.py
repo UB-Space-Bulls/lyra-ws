@@ -37,7 +37,7 @@ def generate_launch_description():
     urdf_pkg = get_package_share_directory('urdf_description')
 
     nav2_params_file = PathJoinSubstitution([pkg_share, 'config', 'nav2_params.yaml'])
-    #rviz_config_file = PathJoinSubstitution([pkg_share, 'rviz', 'nav2_default_view.rviz'])
+    rviz_config_file = PathJoinSubstitution([pkg_share, 'rviz', 'nav2bringup.rviz'])
     urdf_path        = os.path.join(urdf_pkg, 'urdf', 'urdf.xacro')  # adjust filenames
 
     # ─── ZED + RTAB-Map (your existing launch) ────────────────────────────────
@@ -120,21 +120,27 @@ def generate_launch_description():
         }.items()
     )
 
+    nav2tag_pub = Node(
+        package='bringup',
+        executable='nav2tag',
+        name='nav2tag'
+    )
+
     # ─── Waypoint Follower ────────────────────────────────────────────────────
     # nav2_bringup's navigation_launch.py includes this, but listed explicitly
     # here for clarity. Remove if you get duplicate node warnings.
 
     # ─── RViz2 (optional) ─────────────────────────────────────────────────────
 
-    #rviz_node = Node(
-    #    package='rviz2',
-    #    executable='rviz2',
-    #    name='rviz2',
-    #    output='screen',
-    #    condition=IfCondition(use_rviz),
-    #    arguments=['-d', rviz_config_file],
-    #    parameters=[{'use_sim_time': use_sim_time}]
-    #)
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        condition=IfCondition(use_rviz),
+        arguments=['-d', rviz_config_file],
+        parameters=[{'use_sim_time': use_sim_time}]
+    )
 
     # ─────────────────────────────────────────────────────────────────────────
 
@@ -154,7 +160,8 @@ def generate_launch_description():
 
         # 3. Start Nav2 stack
         TimerAction(period=10.0,actions=[nav2_bringup_launch]),
+        TimerAction(period=14.0,actions=[nav2tag_pub]),
 
         # 4. Optional RViz
-        #rviz_node,
+        rviz_node,
     ])
