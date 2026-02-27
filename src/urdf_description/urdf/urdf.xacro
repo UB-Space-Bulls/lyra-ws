@@ -363,7 +363,7 @@
 </link>
 
 <!-- ZED2 Camera Links -->
-<link name="zed_camera_link">
+<link name="zed2_camera_link">
   <visual>
     <origin xyz="0 0 0" rpy="0 0 1.5708"/>
     <geometry>
@@ -393,15 +393,15 @@
 </link>
 
 <joint name="zed2_imu_joint" type="fixed">
-  <parent link="zed_camera_link"/>
+  <parent link="zed2_camera_link"/>
   <child link="zed2_imu_link"/>
   <origin xyz="0 0 0" rpy="0 0 0"/>
 </joint>
 
 
-<joint name="zed_camera_joint" type="fixed">
+<joint name="zed2_camera_joint" type="fixed">
   <parent link="base_link"/>
-  <child link="zed_camera_link"/>
+  <child link="zed2_camera_link"/>
   <!-- Adjust xyz to where your camera sits on the rover -->
   <origin xyz="0.15 0 0.2" rpy="0 0 0"/>
 </joint>

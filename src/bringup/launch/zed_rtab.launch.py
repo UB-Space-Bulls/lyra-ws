@@ -1,6 +1,6 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -73,5 +73,5 @@ def generate_launch_description():
     return LaunchDescription([
         declare_use_sim_time,
         zed_wrapper_launch,
-        rtabmap_node,
+        TimerAction(period=2.0,actions=[rtabmap_node]),
     ])
