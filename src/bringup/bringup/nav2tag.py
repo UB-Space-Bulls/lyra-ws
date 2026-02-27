@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
 from rclpy.duration import Duration
+import rclpy.time
 from nav2_msgs.action import NavigateToPose
 from geometry_msgs.msg import PoseStamped
 import tf2_ros
@@ -14,48 +15,82 @@ class NavigateToTag(Node):
 
         self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
 
-        # Increase TF buffer duration to match rtabmap.yaml tf_buffer_duration
         self.tf_buffer = tf2_ros.Buffer(cache_time=Duration(seconds=10.0))
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
-        self.goal_sent = False
         self.goal_active = False
-        self.target_tag = 'tag36h11:0'
         self.stop_distance = 0.5
+        self.tag_prefix = 'tag36h11'   # matches any tag36h11:* frame
 
-        self.timer = self.create_timer(1.0, self.try_navigate)  # was 0.5 — give TF more time between checks
-        self.get_logger().info('Waiting for tag in TF...')
+        self.timer = self.create_timer(1.0, self.try_navigate)
+        self.get_logger().info('Waiting for any tag36h11 tag in TF...')
+
+    def find_tag_in_tf(self):
+        """
+        Scan all frames in the TF tree and return the first one
+        that starts with the tag prefix (e.g. 'tag36h11:2', 'tag36h11:5').
+        Returns None if no tag is visible yet.
+        """
+        try:
+            frames_yaml = self.tf_buffer.all_frames_as_yaml()
+        except Exception as e:
+            self.get_logger().warn(f'Could not query TF frames: {e}', throttle_duration_sec=3.0)
+            return None
+
+        for line in frames_yaml.splitlines():
+            # Each frame appears as "  frame_name:" at the start of a block
+            line = line.strip()
+            if line.endswith(':') and line[:-1].startswith(self.tag_prefix):
+                return line[:-1]   # strip trailing colon
+
+        return None
 
     def try_navigate(self):
-        # If a goal is currently being executed, don't send another
         if self.goal_active:
             return
 
+        # Check map→odom exists before doing anything else
         try:
-            # Use a small time offset in the past instead of Time(0)
-            # This ensures we get a real recent transform, not a stale cached one
-            lookup_time = self.get_clock().now() - Duration(seconds=0.1)
+            self.tf_buffer.lookup_transform(
+                'map', 'odom',
+                rclpy.time.Time(),
+                timeout=Duration(seconds=1.0)
+            )
+        except Exception as e:
+            self.get_logger().warn(
+                f'map→odom not available — is RTAB-Map running? ({e})',
+                throttle_duration_sec=3.0
+            )
+            return
 
+        # Dynamically find whichever tag is currently visible
+        tag_frame = self.find_tag_in_tf()
+        if tag_frame is None:
+            self.get_logger().warn('No tag36h11 tag visible in TF tree yet', throttle_duration_sec=2.0)
+            return
+
+        self.get_logger().info(f'Found tag: {tag_frame}', throttle_duration_sec=2.0)
+
+        try:
             transform = self.tf_buffer.lookup_transform(
                 'map',
-                self.target_tag,
-                lookup_time,
-                timeout=Duration(seconds=1.0)   # was 0.5 — more headroom on Jetson
+                tag_frame,
+                rclpy.time.Time(),          # latest available
+                timeout=Duration(seconds=1.0)
             )
         except tf2_ros.LookupException:
-            self.get_logger().warn('Tag not in TF tree yet', throttle_duration_sec=2.0)
+            self.get_logger().warn(f'{tag_frame} disappeared from TF', throttle_duration_sec=2.0)
             return
         except tf2_ros.ExtrapolationException as e:
-            self.get_logger().warn(f'TF extrapolation error: {e}', throttle_duration_sec=2.0)
+            self.get_logger().warn(f'TF extrapolation: {e}', throttle_duration_sec=2.0)
             return
         except tf2_ros.ConnectivityException as e:
-            self.get_logger().warn(f'TF connectivity error: {e}', throttle_duration_sec=2.0)
+            self.get_logger().warn(f'TF connectivity (broken chain?): {e}', throttle_duration_sec=2.0)
             return
         except Exception as e:
             self.get_logger().warn(f'TF lookup failed: {e}', throttle_duration_sec=2.0)
             return
 
-        # Build goal pose in front of tag
         goal = PoseStamped()
         goal.header.frame_id = 'map'
         goal.header.stamp = self.get_clock().now().to_msg()
@@ -69,7 +104,7 @@ class NavigateToTag(Node):
             1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         )
 
-        # Offset stop_distance in front of the tag
+        # Stop stop_distance in front of the tag
         goal.pose.position.x = tx - self.stop_distance * math.cos(yaw)
         goal.pose.position.y = ty - self.stop_distance * math.sin(yaw)
         goal.pose.position.z = 0.0
@@ -81,13 +116,16 @@ class NavigateToTag(Node):
         goal.pose.orientation.z = math.sin(facing_yaw / 2.0)
         goal.pose.orientation.w = math.cos(facing_yaw / 2.0)
 
+        self.get_logger().info(
+            f'Navigating to {tag_frame} at ({tx:.2f}, {ty:.2f}) → '
+            f'goal ({goal.pose.position.x:.2f}, {goal.pose.position.y:.2f})'
+        )
         self.send_goal(goal)
 
     def send_goal(self, pose):
-        self.get_logger().info('Sending goal to Nav2...')
-
         if not self.nav_client.wait_for_server(timeout_sec=5.0):
             self.get_logger().error('Nav2 action server not available!')
+            self.goal_active = False
             return
 
         goal_msg = NavigateToPose.Goal()
@@ -104,7 +142,7 @@ class NavigateToTag(Node):
         handle = future.result()
         if not handle.accepted:
             self.get_logger().error('Goal rejected by Nav2 — will retry')
-            self.goal_active = False   # allow retry
+            self.goal_active = False
             return
         self.get_logger().info('Goal accepted!')
         handle.get_result_async().add_done_callback(self.result_cb)
@@ -112,14 +150,12 @@ class NavigateToTag(Node):
     def result_cb(self, future):
         result = future.result()
         status = result.status
-
-        # status 4 = SUCCEEDED, anything else = failed
         if status == 4:
             self.get_logger().info('Successfully reached the tag!')
-            self.goal_active = True   # goal done, don't re-navigate
+            self.goal_active = True   # stay stopped, don't re-navigate
         else:
-            self.get_logger().warn(f'Navigation failed with status {status} — will retry')
-            self.goal_active = False  # reset so we retry
+            self.get_logger().warn(f'Navigation failed with status {status} — retrying')
+            self.goal_active = False
 
     def feedback_cb(self, feedback):
         dist = feedback.feedback.distance_remaining
