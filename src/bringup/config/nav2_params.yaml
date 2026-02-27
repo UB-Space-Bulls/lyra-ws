@@ -156,7 +156,7 @@ global_costmap:
       update_frequency: 1.0
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: base_link
+      robot_base_frame: baselink
       robot_radius: 0.45
       resolution: 0.05
       track_unknown_space: true
@@ -273,3 +273,5 @@ velocity_smoother:
 
 
 #THIS FILE RUNS ON HOPES AND DREAMS AND PRAYERS AND CAFFIENE
+#TRAVIS MINOR AND SHOUVIK DAS WAS HERE, REMEMBER THOSE WHO HAVE PAVED THE PATH BEFORE YOU
+#I HATE URC ~ TRAVIS MINOR
