@@ -1,0 +1,49 @@
+[nav2tag-17] [WARN] [1772197013.480648712] [nav2tag]: Tag not in TF tree yet
+[rviz2-2] [INFO] [1772197014.992812360] [rviz2]: Message Filter dropping message: frame 'zed2_imu_link' at time 1772197014.455 for reason 'discarding message because the queue is full'
+[nav2tag-17] [WARN] [1772197015.492236776] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197016.413446664] [rtabmap]: rtabmap (222): Rate=0.50s, Limit=0.000s, Conversion=0.0014s, RTAB-Map=0.3974s, Maps update=0.0459s pub=0.0001s delay=0.5584s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197017.405742088] [rtabmap]: rtabmap (223): Rate=0.50s, Limit=0.000s, Conversion=0.0211s, RTAB-Map=0.3126s, Maps update=0.0120s pub=0.0001s delay=1.0174s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197017.517566792] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197018.672471816] [rtabmap]: rtabmap (224): Rate=0.50s, Limit=0.000s, Conversion=0.0021s, RTAB-Map=0.3412s, Maps update=0.0321s pub=0.0001s delay=0.6509s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197019.556772520] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197019.720330152] [rtabmap]: rtabmap (225): Rate=0.50s, Limit=0.000s, Conversion=0.0010s, RTAB-Map=0.2334s, Maps update=0.0002s pub=0.0000s delay=0.7986s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197020.090239080] [rtabmap]: rtabmap (226): Rate=0.50s, Limit=0.000s, Conversion=0.0007s, RTAB-Map=0.2216s, Maps update=0.0003s pub=0.0000s delay=0.6018s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197021.432299912] [rtabmap]: rtabmap (227): Rate=0.50s, Limit=0.000s, Conversion=0.0009s, RTAB-Map=0.2396s, Maps update=0.0002s pub=0.0000s delay=0.3440s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197021.603099240] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197023.371716712] [rtabmap]: rtabmap (228): Rate=0.50s, Limit=0.000s, Conversion=0.0009s, RTAB-Map=0.3794s, Maps update=0.0002s pub=0.0000s delay=1.0834s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197023.648207016] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197024.402144904] [rtabmap]: rtabmap (229): Rate=0.50s, Limit=0.000s, Conversion=0.0014s, RTAB-Map=0.2289s, Maps update=0.0002s pub=0.0000s delay=0.3470s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197025.333531880] [rtabmap]: rtabmap (230): Rate=0.50s, Limit=0.000s, Conversion=0.0019s, RTAB-Map=0.3442s, Maps update=0.0002s pub=0.0000s delay=0.4783s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197025.660999016] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197026.577997416] [rtabmap]: rtabmap (231): Rate=0.50s, Limit=0.000s, Conversion=0.0116s, RTAB-Map=0.3832s, Maps update=0.0001s pub=0.0000s delay=0.7895s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197027.687726664] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197029.187958248] [rtabmap]: rtabmap (232): Rate=0.50s, Limit=0.000s, Conversion=0.0047s, RTAB-Map=0.3673s, Maps update=0.0001s pub=0.0000s delay=1.5994s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197029.700436872] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197029.819470952] [rtabmap]: rtabmap (233): Rate=0.50s, Limit=0.000s, Conversion=0.0009s, RTAB-Map=0.2560s, Maps update=0.0210s pub=0.0000s delay=1.2311s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197030.474351272] [rtabmap]: rtabmap (234): Rate=0.50s, Limit=0.000s, Conversion=0.0007s, RTAB-Map=0.2800s, Maps update=0.0077s pub=0.0001s delay=0.5859s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197030.841661160] [rtabmap]: rtabmap (235): Rate=0.50s, Limit=0.000s, Conversion=0.0009s, RTAB-Map=0.2573s, Maps update=0.0076s pub=0.0001s delay=0.3531s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197031.558091816] [rtabmap]: rtabmap (236): Rate=0.50s, Limit=0.000s, Conversion=0.0023s, RTAB-Map=0.2226s, Maps update=0.0002s pub=0.0000s delay=0.3363s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197031.708495592] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197032.470574088] [rtabmap]: rtabmap (237): Rate=0.50s, Limit=0.000s, Conversion=0.0006s, RTAB-Map=0.1895s, Maps update=0.0675s pub=0.0001s delay=0.5488s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197033.031402056] [rtabmap]: rtabmap (238): Rate=0.50s, Limit=0.000s, Conversion=0.0009s, RTAB-Map=0.2701s, Maps update=0.0551s pub=0.0001s delay=0.4095s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197033.721318568] [nav2tag]: Tag not in TF tree yet
+[nav2tag-17] [WARN] [1772197035.742775016] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197036.840276808] [rtabmap]: rtabmap (239): Rate=0.50s, Limit=0.000s, Conversion=0.0042s, RTAB-Map=0.2418s, Maps update=0.0382s pub=0.0001s delay=3.4182s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197037.753900360] [nav2tag]: Tag not in TF tree yet
+[rviz2-2] [INFO] [1772197039.631986792] [rviz2]: Message Filter dropping message: frame 'zed2_imu_link' at time 1772197039.062 for reason 'discarding message because the queue is full'
+[nav2tag-17] [WARN] [1772197039.769461256] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197040.081930984] [rtabmap]: rtabmap (240): Rate=0.50s, Limit=0.000s, Conversion=0.0008s, RTAB-Map=0.3253s, Maps update=0.0002s pub=0.0000s delay=0.4265s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197041.812850152] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197042.635959208] [rtabmap]: rtabmap (241): Rate=0.50s, Limit=0.000s, Conversion=0.0007s, RTAB-Map=0.4576s, Maps update=0.0320s pub=0.0001s delay=0.6138s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197043.828930216] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197045.538413448] [rtabmap]: rtabmap (242): Rate=0.50s, Limit=0.000s, Conversion=0.0023s, RTAB-Map=0.2285s, Maps update=0.0214s pub=0.0000s delay=0.7496s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197045.860128328] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197046.282907880] [rtabmap]: rtabmap (243): Rate=0.50s, Limit=0.000s, Conversion=0.0007s, RTAB-Map=0.2954s, Maps update=0.0002s pub=0.0000s delay=0.3940s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197047.481301736] [rtabmap]: rtabmap (244): Rate=0.50s, Limit=0.000s, Conversion=0.0008s, RTAB-Map=0.2970s, Maps update=0.0234s pub=0.0001s delay=0.4259s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197047.898559304] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197049.103812648] [rtabmap]: rtabmap (245): Rate=0.50s, Limit=0.000s, Conversion=0.0021s, RTAB-Map=0.2675s, Maps update=0.0461s pub=0.0001s delay=1.1484s (local map=1, WM=1)
+[rtabmap-8] [INFO] [1772197049.685185416] [rtabmap]: rtabmap (246): Rate=0.50s, Limit=0.000s, Conversion=0.0007s, RTAB-Map=0.3210s, Maps update=0.0003s pub=0.0001s delay=0.5613s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197049.910361416] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197051.026739912] [rtabmap]: rtabmap (247): Rate=0.50s, Limit=0.000s, Conversion=0.0026s, RTAB-Map=0.2039s, Maps update=0.0092s pub=0.0001s delay=0.8379s (local map=1, WM=1)
+[nav2tag-17] [WARN] [1772197051.936529032] [nav2tag]: Tag not in TF tree yet
+[rtabmap-8] [INFO] [1772197052.242097320] [rtabmap]: rtabmap (248): Rate=0.50s, Limit=0.000s, Conversion=0.0018s, RTAB-Map=0.1860s, Maps update=0.0005s pub=0.0000s delay=0.7864s (local map=1, WM=1)
