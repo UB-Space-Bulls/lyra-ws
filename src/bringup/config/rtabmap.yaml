@@ -41,3 +41,5 @@ rtabmap:
     RGBD/ProximityBySpace: "true"
     # Mapping mode (set Mem/IncrementalMemory to false for localization-only)
     Mem/IncrementalMemory: "true"
+    Mem/InitWMWithAllNodes: "false"
+    database_path: "" 

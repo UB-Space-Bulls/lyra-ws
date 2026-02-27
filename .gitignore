@@ -7,3 +7,7 @@ install/
 log/*
 log/
 *Zone.Identifier
+
+__pycache__
+
+*.gv
