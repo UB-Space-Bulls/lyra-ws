@@ -1,104 +1,239 @@
 #!/usr/bin/env python3
 """
-ROS2 Motor Driver Node
-Drives 2 Moteus CAN controllers (joints 0-1) and 3 GPIO PWM motors (joints 2-4).
-Subscribes to /velocity_controller/commands (Float64MultiArray, length 5).
+ROS2 Motor Driver Node — 3× GPIO PWM motors (ESC/servo, RC pulse widths)
+==========================================================================
+Pulse width mapping:
+  1000 µs  →  full reverse
+  1500 µs  →  neutral / stop  (sent on startup to arm ESCs)
+  2000 µs  →  full forward
 
-Keyboard mapping (keyboard.py, NUM_JOINTS=5):
-  1/q -> Moteus motor 0
-  2/w -> Moteus motor 1
-  3/e -> GPIO motor 0 (joint 2)
-  4/r -> GPIO motor 1 (joint 3)
-  5/t -> GPIO motor 2 (joint 4)
+Subscribes to /velocity_controller/commands (Float64MultiArray, length 3).
+Commands are floats in [-1.0 … +1.0].
 
-Hardware assumptions:
-  - Moteus controllers on CAN bus, IDs 1 and 2 (set MOTEUS_IDS below)
-  - GPIO PWM motors on pins defined in GPIO_PWM_PINS (BOARD numbering)
-  - Running on an NVIDIA Jetson (Orin / Xavier / Nano)
-  - Jetson.GPIO library installed: pip install Jetson.GPIO
+Keyboard mapping (keyboard.py, NUM_JOINTS=3):
+  1/q  →  motor 0  (pin 32)
+  2/w  →  motor 1  (pin 33)
+  3/e  →  motor 2  (pin 15  — see PWM note below)
+
+──────────────────────────────────────────────────────────────────────────────
+PWM PIN NOTES (Jetson Nano / Orin / Xavier)
+──────────────────────────────────────────────────────────────────────────────
+• Pins 32 and 33 are the only *hardware* PWM pins on the standard 40-pin header.
+• Pin 15 is a regular GPIO and cannot do hardware PWM natively.
+  For a real third ESC/servo use one of these alternatives:
+    A) Use a PCA9685 I²C PWM board  (16 channels, recommended for 3+ motors)
+    B) Orin/Xavier boards may expose additional PWM channels — check your pinout
+  In simulation mode all three channels work fine (no real hardware needed).
+
+This driver controls hardware channels through the Linux sysfs PWM interface
+directly (nanosecond precision), bypassing the duty-cycle rounding in the
+Jetson.GPIO Python wrapper.  Jetson.GPIO is still used for software PWM fallback.
+
+Sysfs PWM chip mapping (Jetson Nano — adjust for your board):
+  Pin 32  →  /sys/class/pwm/pwmchip0/pwm0
+  Pin 33  →  /sys/class/pwm/pwmchip0/pwm2   (or pwmchip2/pwm0 on some images)
+  Pin 15  →  NOT a hardware PWM; falls back to Jetson.GPIO software PWM
+──────────────────────────────────────────────────────────────────────────────
 """
 
+import os
+import time
+import argparse
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
-import asyncio
-import threading
 
 # ── Configuration ──────────────────────────────────────────────────────────────
-NUM_MOTEUS   = 2          # number of Moteus CAN motors
-NUM_GPIO     = 3          # number of GPIO PWM motors
-NUM_JOINTS   = NUM_MOTEUS + NUM_GPIO  # total = 5
+NUM_JOINTS = 3
 
-MOTEUS_IDS   = [1, 2]     # CAN IDs of Moteus controllers
+# RC pulse widths in microseconds
+PWM_MIN_US     = 1000   # full reverse
+PWM_NEUTRAL_US = 1500   # stop / neutral
+PWM_MAX_US     = 2000   # full forward
+PWM_FREQ_HZ    = 50     # standard RC frequency (20 ms period)
 
-# BOARD pin numbers for GPIO motor PWM signals (physical header pins)
-# Common Jetson PWM-capable pins: 32, 33 (Orin/Xavier/Nano vary — check your pinout)
-GPIO_PWM_PINS = [32, 33, 15]   # one pin per GPIO motor
-GPIO_PWM_FREQ = 50             # Hz (standard servo/ESC frequency)
+ESC_ARM_DURATION_S = 2.0   # seconds to hold neutral on startup (ESC arming)
 
-# Velocity scale: maps [-1, 1] command to Moteus velocity (rev/s)
-MOTEUS_VEL_SCALE = 5.0
+# ── Sysfs PWM channel definitions ─────────────────────────────────────────────
+# Each entry is the sysfs directory for that PWM channel.
+# Adjust for your specific Jetson board / kernel image.
+# Set to None to fall back to Jetson.GPIO software PWM for that pin.
+SYSFS_PWM_DIRS = [
+    "/sys/class/pwm/pwmchip0/pwm0",   # pin 32
+    "/sys/class/pwm/pwmchip0/pwm2",   # pin 33  (try pwmchip2/pwm0 if this fails)
+    None,                              # pin 15 — no hardware PWM; uses software PWM
+]
 
-# Velocity to duty-cycle mapping for GPIO motors
-# cmd in [-1, 1] -> duty cycle in [GPIO_DC_MIN, GPIO_DC_MAX]
-GPIO_DC_MIN  = 5.0    # % duty cycle for full reverse
-GPIO_DC_MID  = 7.5    # % duty cycle for stop
-GPIO_DC_MAX  = 10.0   # % duty cycle for full forward
+# BOARD pin numbers (used only for software-PWM fallback channels)
+GPIO_PWM_PINS = [32, 33, 15]
+
+# Pre-compute constants
+_PERIOD_NS  = int(1_000_000_000 / PWM_FREQ_HZ)    # 20 000 000 ns
+_PERIOD_US  = 1_000_000.0 / PWM_FREQ_HZ            # 20 000 µs
+_DC_NEUTRAL = (PWM_NEUTRAL_US / _PERIOD_US) * 100.0
+_DC_MAX     = (PWM_MAX_US     / _PERIOD_US) * 100.0
+_DC_MIN     = (PWM_MIN_US     / _PERIOD_US) * 100.0
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-def vel_to_duty(vel: float) -> float:
-    """Map velocity [-1, 1] to PWM duty cycle."""
-    vel = max(-1.0, min(1.0, vel))
-    if vel >= 0:
-        return GPIO_DC_MID + vel * (GPIO_DC_MAX - GPIO_DC_MID)
-    else:
-        return GPIO_DC_MID + vel * (GPIO_DC_MID - GPIO_DC_MIN)
+# ── Sysfs PWM wrapper ──────────────────────────────────────────────────────────
 
+class SysfsPWM:
+    """
+    Controls a hardware PWM channel via the Linux sysfs interface.
+    Uses nanosecond pulse widths for maximum precision.
+    """
+
+    def __init__(self, pwm_dir: str):
+        self._dir          = pwm_dir
+        self._period_path  = os.path.join(pwm_dir, "period")
+        self._duty_path    = os.path.join(pwm_dir, "duty_cycle")
+        self._enable_path  = os.path.join(pwm_dir, "enable")
+        self._polarity_path = os.path.join(pwm_dir, "polarity")
+        self._ok = False
+
+    @staticmethod
+    def _write(path: str, value: str) -> bool:
+        try:
+            with open(path, 'w') as f:
+                f.write(value)
+            return True
+        except OSError:
+            return False
+
+    def setup(self, period_ns: int) -> bool:
+        # Export channel if sysfs dir not yet present
+        if not os.path.isdir(self._dir):
+            chip_dir = os.path.dirname(self._dir)
+            channel  = int(os.path.basename(self._dir).replace("pwm", ""))
+            self._write(os.path.join(chip_dir, "export"), str(channel))
+            time.sleep(0.15)
+
+        if not os.path.isdir(self._dir):
+            return False
+
+        self._write(self._enable_path, "0")          # disable before config
+        self._write(self._polarity_path, "normal")
+        if not self._write(self._period_path, str(period_ns)):
+            return False
+        neutral_ns = PWM_NEUTRAL_US * 1000
+        if not self._write(self._duty_path, str(neutral_ns)):
+            return False
+        if not self._write(self._enable_path, "1"):
+            return False
+        self._ok = True
+        return True
+
+    def set_pulse_us(self, pulse_us: float):
+        if not self._ok:
+            return
+        clamped_us = max(PWM_MIN_US, min(PWM_MAX_US, pulse_us))
+        self._write(self._duty_path, str(int(clamped_us * 1000)))
+
+    def set_neutral(self):
+        self.set_pulse_us(PWM_NEUTRAL_US)
+
+    def stop(self):
+        if self._ok:
+            self.set_neutral()
+            self._write(self._enable_path, "0")
+        self._ok = False
+
+
+# ── Velocity helpers ──────────────────────────────────────────────────────────
+
+def vel_to_pulse_us(vel: float) -> float:
+    """Map velocity [-1.0, +1.0]  →  RC pulse width in microseconds."""
+    vel = max(-1.0, min(1.0, vel))
+    if vel >= 0.0:
+        return PWM_NEUTRAL_US + vel * (PWM_MAX_US - PWM_NEUTRAL_US)
+    else:
+        return PWM_NEUTRAL_US + vel * (PWM_NEUTRAL_US - PWM_MIN_US)
+
+
+def vel_to_duty(vel: float) -> float:
+    """Map velocity [-1.0, +1.0]  →  duty cycle % (for software PWM fallback)."""
+    vel = max(-1.0, min(1.0, vel))
+    if vel >= 0.0:
+        return _DC_NEUTRAL + vel * (_DC_MAX - _DC_NEUTRAL)
+    else:
+        return _DC_NEUTRAL + vel * (_DC_NEUTRAL - _DC_MIN)
+
+
+# ── ROS2 Node ──────────────────────────────────────────────────────────────────
 
 class MotorDriverNode(Node):
-    def __init__(self):
+    def __init__(self, dry_run: bool = False):
         super().__init__('motor_driver_node')
 
-        # ── GPIO setup ────────────────────────────────────────────────────────
-        try:
-            import Jetson.GPIO as GPIO
-            self._GPIO = GPIO
-            GPIO.setmode(GPIO.BOARD)
-            self._pwm_channels = []
-            for pin in GPIO_PWM_PINS:
-                GPIO.setup(pin, GPIO.OUT)
-                pwm = GPIO.PWM(pin, GPIO_PWM_FREQ)
-                pwm.start(GPIO_DC_MID)  # neutral / stopped
-                self._pwm_channels.append(pwm)
-            self.get_logger().info(f"GPIO PWM initialised on pins {GPIO_PWM_PINS}")
-        except ImportError:
-            self.get_logger().warn("Jetson.GPIO not found – GPIO motors disabled (simulation mode)")
-            self._GPIO = None
-            self._pwm_channels = [None] * NUM_GPIO
-
-        # ── Moteus async setup ────────────────────────────────────────────────
-        try:
-            import moteus
-            self._moteus = moteus
-            self._moteus_controllers = {}
-            self._moteus_loop = asyncio.new_event_loop()
-            self._moteus_thread = threading.Thread(
-                target=self._moteus_loop.run_forever, daemon=True)
-            self._moteus_thread.start()
-            # Initialise controllers in the async loop
-            future = asyncio.run_coroutine_threadsafe(
-                self._init_moteus(), self._moteus_loop)
-            future.result(timeout=5.0)
-            self.get_logger().info(f"Moteus controllers initialised: IDs {MOTEUS_IDS}")
-        except ImportError:
-            self.get_logger().warn("moteus library not found – Moteus motors disabled (simulation mode)")
-            self._moteus = None
-            self._moteus_controllers = {}
-            self._moteus_loop = None
-
-        # ── Velocity state ────────────────────────────────────────────────────
+        self._dry_run    = dry_run
+        self._sysfs_pwm  = []        # SysfsPWM or None per channel
+        self._soft_pwm   = []        # Jetson.GPIO PWM or None per channel
+        self._GPIO       = None
         self._velocities = [0.0] * NUM_JOINTS
+        self._armed      = False
+
+        if self._dry_run:
+            self.get_logger().info(
+                "*** DRY-RUN MODE — no hardware will be touched ***")
+            self._sysfs_pwm = [None] * NUM_JOINTS
+            self._soft_pwm  = [None] * NUM_JOINTS
+        else:
+            # ── Jetson.GPIO import (used for software PWM fallback only) ──────
+            try:
+                import Jetson.GPIO as GPIO
+                self._GPIO = GPIO
+                GPIO.setmode(GPIO.BOARD)
+            except ImportError:
+                self.get_logger().warn(
+                    "Jetson.GPIO not found – software PWM fallback unavailable (simulation mode)")
+
+            # ── Initialise each channel ───────────────────────────────────────
+            for i in range(NUM_JOINTS):
+                sysfs_dir = SYSFS_PWM_DIRS[i]
+                pin       = GPIO_PWM_PINS[i]
+
+                # 1) Try hardware sysfs PWM
+                if sysfs_dir is not None:
+                    ch = SysfsPWM(sysfs_dir)
+                    if ch.setup(_PERIOD_NS):
+                        self._sysfs_pwm.append(ch)
+                        self._soft_pwm.append(None)
+                        self.get_logger().info(
+                            f"Motor {i}: ✓ hardware sysfs PWM  →  {sysfs_dir}")
+                        continue
+                    else:
+                        self.get_logger().warn(
+                            f"Motor {i}: sysfs PWM failed ({sysfs_dir}), "
+                            f"falling back to software PWM on pin {pin}")
+
+                # 2) Fallback: Jetson.GPIO software PWM
+                self._sysfs_pwm.append(None)
+                if self._GPIO is not None:
+                    try:
+                        self._GPIO.setup(pin, self._GPIO.OUT)
+                        pwm = self._GPIO.PWM(pin, PWM_FREQ_HZ)
+                        pwm.start(_DC_NEUTRAL)
+                        self._soft_pwm.append(pwm)
+                        self.get_logger().info(
+                            f"Motor {i}: ⚠ software PWM on pin {pin} "
+                            f"(less timing-precise)")
+                        continue
+                    except Exception as e:
+                        self.get_logger().warn(
+                            f"Motor {i}: software PWM on pin {pin} failed ({e}) "
+                            f"→ simulation mode")
+
+                # 3) Simulation
+                self._soft_pwm.append(None)
+                self.get_logger().warn(f"Motor {i}: simulation mode (no hardware)")
+
+        # ── ESC arming: hold neutral for ESC_ARM_DURATION_S ──────────────────
+        self.get_logger().info(
+            f"Holding neutral ({PWM_NEUTRAL_US} µs) for "
+            f"{ESC_ARM_DURATION_S:.1f} s to arm ESCs …")
+        self._set_all_neutral()
+        self._arm_timer = self.create_timer(ESC_ARM_DURATION_S, self._on_armed)
 
         # ── ROS subscriber ────────────────────────────────────────────────────
         self.sub = self.create_subscription(
@@ -107,83 +242,66 @@ class MotorDriverNode(Node):
             self._cmd_callback,
             10)
 
-        # ── Control loop timer (20 Hz) ─────────────────────────────────────
-        self.create_timer(0.05, self._control_loop)
+        # ── Control loop timer (50 Hz) ────────────────────────────────────────
+        self.create_timer(0.02, self._control_loop)
 
         self.get_logger().info(
-            f"motor_driver_node ready  "
-            f"({NUM_MOTEUS} Moteus + {NUM_GPIO} GPIO, {NUM_JOINTS} joints total)")
+            f"motor_driver_node ready — {NUM_JOINTS} motors  "
+            f"[{PWM_MIN_US} / {PWM_NEUTRAL_US} / {PWM_MAX_US} µs  "
+            f"rev / neutral / fwd]")
 
-    # ── Moteus async initialisation ───────────────────────────────────────────
-    async def _init_moteus(self):
-        for cid in MOTEUS_IDS:
-            ctrl = self._moteus.Controller(id=cid)
-            await ctrl.set_stop()           # clear any faults
-            self._moteus_controllers[cid] = ctrl
+    # ── ESC arm callback (fires once) ─────────────────────────────────────────
+    def _on_armed(self):
+        self._armed = True
+        self._arm_timer.cancel()
+        self.get_logger().info("ESCs armed — accepting velocity commands")
 
     # ── ROS callback ─────────────────────────────────────────────────────────
     def _cmd_callback(self, msg: Float64MultiArray):
+        if not self._armed:
+            return
         n = min(len(msg.data), NUM_JOINTS)
         for i in range(n):
             self._velocities[i] = float(msg.data[i])
 
-    # ── Main control loop ─────────────────────────────────────────────────────
+    # ── Control loop ─────────────────────────────────────────────────────────
     def _control_loop(self):
-        # Moteus joints (0 .. NUM_MOTEUS-1)
-        if self._moteus and self._moteus_loop:
-            asyncio.run_coroutine_threadsafe(
-                self._send_moteus_commands(), self._moteus_loop)
+        if not self._armed:
+            return
+        for i in range(NUM_JOINTS):
+            vel      = self._velocities[i]
+            pulse_us = vel_to_pulse_us(vel)
 
-        # GPIO joints (NUM_MOTEUS .. NUM_JOINTS-1)
-        for i in range(NUM_GPIO):
-            joint_idx = NUM_MOTEUS + i
-            vel = self._velocities[joint_idx]
-            dc = vel_to_duty(vel)
-            pwm = self._pwm_channels[i]
-            if pwm is not None:
-                pwm.ChangeDutyCycle(dc)
-            else:
-                # Simulation: just log non-zero commands
+            if self._sysfs_pwm[i] is not None:
+                self._sysfs_pwm[i].set_pulse_us(pulse_us)
+            elif self._soft_pwm[i] is not None:
+                self._soft_pwm[i].ChangeDutyCycle(vel_to_duty(vel))
+            elif vel != 0.0 or self._dry_run:
                 if vel != 0.0:
-                    self.get_logger().debug(
-                        f"[SIM] GPIO motor {i}  vel={vel:.3f}  duty={dc:.1f}%")
+                    self.get_logger().info(
+                        f"[DRY-RUN] motor {i}  vel={vel:+.3f}  pulse={pulse_us:.0f} µs")
 
-    async def _send_moteus_commands(self):
-        for i, cid in enumerate(MOTEUS_IDS):
-            vel = self._velocities[i] * MOTEUS_VEL_SCALE
-            ctrl = self._moteus_controllers.get(cid)
-            if ctrl is None:
-                continue
-            try:
-                await ctrl.set_position(
-                    position=float('nan'),   # position NaN = velocity mode
-                    velocity=vel,
-                    query=False)
-            except Exception as e:
-                self.get_logger().error(f"Moteus ID {cid} error: {e}")
+    # ── Helpers ───────────────────────────────────────────────────────────────
+    def _set_all_neutral(self):
+        for i in range(NUM_JOINTS):
+            if self._sysfs_pwm[i] is not None:
+                self._sysfs_pwm[i].set_neutral()
+            elif self._soft_pwm[i] is not None:
+                self._soft_pwm[i].ChangeDutyCycle(_DC_NEUTRAL)
 
     # ── Cleanup ───────────────────────────────────────────────────────────────
     def destroy_node(self):
-        self.get_logger().info("Shutting down motor_driver_node …")
+        self.get_logger().info("Shutting down — returning all motors to neutral …")
+        self._set_all_neutral()
+        time.sleep(0.1)
 
-        # Stop all Moteus motors
-        if self._moteus and self._moteus_loop:
-            async def _stop_all():
-                for ctrl in self._moteus_controllers.values():
-                    await ctrl.set_stop()
-            future = asyncio.run_coroutine_threadsafe(
-                _stop_all(), self._moteus_loop)
-            try:
-                future.result(timeout=2.0)
-            except Exception:
-                pass
-            self._moteus_loop.call_soon_threadsafe(self._moteus_loop.stop)
+        for ch in self._sysfs_pwm:
+            if ch is not None:
+                ch.stop()
 
-        # Stop GPIO motors and clean up
-        if self._GPIO:
-            for pwm in self._pwm_channels:
-                if pwm:
-                    pwm.ChangeDutyCycle(GPIO_DC_MID)  # neutral before stop
+        if self._GPIO is not None:
+            for pwm in self._soft_pwm:
+                if pwm is not None:
                     pwm.stop()
             self._GPIO.cleanup()
 
@@ -191,8 +309,16 @@ class MotorDriverNode(Node):
 
 
 def main(args=None):
+    # Strip ROS args before argparse, then re-parse remaining
+    import sys as _sys
+    parser = argparse.ArgumentParser(description="Motor Driver Node")
+    parser.add_argument(
+        "--dry-run", action="store_true",
+        help="Run without touching any hardware (for testing keyboard/topic flow)")
+    known, _ = parser.parse_known_args()
+
     rclpy.init(args=args)
-    node = MotorDriverNode()
+    node = MotorDriverNode(dry_run=known.dry_run)
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
