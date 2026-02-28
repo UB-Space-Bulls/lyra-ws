@@ -27,6 +27,7 @@ setup(
     entry_points={
         'console_scripts': [
             'keyboard = armDescription.keyboard:main',
+            'motor_driver_node = armDescription.motor_driver_node:main',
         ],
     },
 )
